@@ -1,0 +1,10 @@
+:root {
+  color-scheme: light dark;
+  font: 16px/1.5 system-ui, sans-serif;
+  /* light-dark() mantem os dois temas sem duplicar media query. */
+  color: light-dark(#1a1a1a, #eaeaea);
+  background: light-dark(#ffffff, #16161a);
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; }

@@ -1,0 +1,34 @@
+services:
+  backend:
+    build: ./backend
+    environment:
+      DATABASE_URL: sqlite:////data/app.db
+      # Origem que o BROWSER usa para abrir o frontend — e ela que vai no
+      # header Origin, nao o nome do service.
+      CORS_ORIGINS: http://localhost:5173
+    volumes:
+      - backend-data:/data
+    ports:
+      - "8000:8000"
+    healthcheck:
+      # A imagem slim nao tem curl; urllib ja vem no Python.
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health').read()"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 15s
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        # Endereco publicado no host: o browser roda fora da rede do compose.
+        VITE_API_URL: http://localhost:8000
+    ports:
+      - "5173:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+
+volumes:
+  backend-data:
