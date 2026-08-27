@@ -26,6 +26,7 @@ class GameCreate(BaseModel):
     status: GameStatus = GameStatus.BACKLOG
     rating: int | None = Field(default=None, ge=0, le=10)
     hours_played: float = Field(default=0, ge=0)
+    cover_image_url: str | None = Field(default=None, max_length=500)
 
     @field_validator("title")
     @classmethod
@@ -42,6 +43,9 @@ class GameUpdate(BaseModel):
     status: GameStatus | None = None
     rating: int | None = Field(default=None, ge=0, le=10)
     hours_played: float | None = Field(default=None, ge=0)
+    # None explicito e valido aqui (diferente dos campos NOT NULL abaixo):
+    # e como o formulario limpa uma capa escolhida por engano.
+    cover_image_url: str | None = Field(default=None, max_length=500)
 
     # None aqui significa "campo ausente". Enviar null explicito nestes campos
     # gravaria NULL em coluna NOT NULL, entao vira 422 em vez de 500.
@@ -70,6 +74,7 @@ class GameRead(BaseModel):
     status: GameStatus
     rating: int | None
     hours_played: float
+    cover_image_url: str | None
     created_at: datetime
     updated_at: datetime
 
@@ -80,6 +85,15 @@ class GameRead(BaseModel):
         if value.tzinfo is None:
             return value.replace(tzinfo=UTC)
         return value.astimezone(UTC)
+
+
+class ExternalGameResult(BaseModel):
+    """Um resultado da busca de capas no catalogo externo (RAWG)."""
+
+    external_id: int
+    name: str
+    released: str | None = None
+    cover_image_url: str | None = None
 
 
 class GamePage(BaseModel):

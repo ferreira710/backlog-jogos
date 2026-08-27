@@ -5,6 +5,7 @@ from fastapi import APIRouter, HTTPException, Query, status
 from app.core.database import SessionDep
 from app.models.game import Game, GameStatus, Platform
 from app.schemas.game import (
+    ExternalGameResult,
     GameCreate,
     GamePage,
     GameRead,
@@ -12,7 +13,9 @@ from app.schemas.game import (
     SortField,
     SortOrder,
 )
+from app.services import external_games as external_games_service
 from app.services import game as game_service
+from app.services.external_games import ExternalSearchUnavailable
 from app.services.game import DuplicateGameError
 
 router = APIRouter(prefix="/games", tags=["games"])
@@ -46,6 +49,22 @@ def list_games(
         skip=skip,
         limit=limit,
     )
+
+
+@router.get(
+    "/external-search",
+    response_model=list[ExternalGameResult],
+    responses={503: {"description": "Busca externa indisponivel"}},
+)
+def search_external_games(
+    q: Annotated[str, Query(min_length=1, max_length=120)],
+):
+    # Rota estatica: precisa vir antes de "/{game_id}", senao "external-search"
+    # cai na validacao de game_id (int) e retorna 422 em vez de bater aqui.
+    try:
+        return external_games_service.search_external_games(q)
+    except ExternalSearchUnavailable as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
 
 
 @router.get("/{game_id}", response_model=GameRead)

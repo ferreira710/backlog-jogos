@@ -9,6 +9,7 @@ export type GameStatus = components["schemas"]["GameStatus"];
 export type Platform = components["schemas"]["Platform"];
 export type SortField = components["schemas"]["SortField"];
 export type SortOrder = components["schemas"]["SortOrder"];
+export type ExternalGameResult = components["schemas"]["ExternalGameResult"];
 
 /** Derivado do spec: se o backend ganhar um filtro novo, ele aparece aqui. */
 export type ListGamesParams = NonNullable<
@@ -113,6 +114,10 @@ export function createGamesClient({ baseUrl, fetch: fetchImpl }: ClientOptions) 
     /** `DELETE /games/{id}` — resolve sem valor; lança NotFoundError se sumiu. */
     remove: (id: number, options: RequestOptions = {}) =>
       request<void>("DELETE", `/games/${id}`, options),
+
+    /** `GET /games/external-search` — catálogo externo (RAWG); 503 se não configurado. */
+    searchExternal: (q: string, options: RequestOptions = {}) =>
+      request<ExternalGameResult[]>("GET", "/games/external-search", { query: { q }, ...options }),
   };
 }
 

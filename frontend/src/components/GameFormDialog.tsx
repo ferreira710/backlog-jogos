@@ -4,12 +4,14 @@ import {
   ConflictError,
   ValidationFailedError,
   api,
+  type ExternalGameResult,
   type Game,
   type GameStatus,
   type Platform,
 } from "../api/client.js";
 import { PLATFORM_LABEL, PLATFORM_ORDER, STATUS_LABEL, STATUS_ORDER } from "../lib/labels.js";
 import { Field } from "./Field.js";
+import { GameCoverSearch } from "./GameCoverSearch.js";
 import { Rating } from "./Rating.js";
 
 interface GameFormDialogProps {
@@ -26,6 +28,7 @@ interface FormState {
   status: GameStatus;
   rating: number | null;
   hours_played: string;
+  cover_image_url: string | null;
 }
 
 function estadoInicial(game: Game | null): FormState {
@@ -35,6 +38,7 @@ function estadoInicial(game: Game | null): FormState {
     status: game?.status ?? "backlog",
     rating: game?.rating ?? null,
     hours_played: game ? String(game.hours_played) : "0",
+    cover_image_url: game?.cover_image_url ?? null,
   };
 }
 
@@ -85,6 +89,7 @@ export function GameFormDialog({ game, aberto, onFechar, onSalvo }: GameFormDial
       status: form.status,
       rating: form.rating,
       hours_played: horas,
+      cover_image_url: form.cover_image_url,
     };
 
     try {
@@ -115,14 +120,19 @@ export function GameFormDialog({ game, aberto, onFechar, onSalvo }: GameFormDial
 
         <Field label="Título" erro={errosDeCampo.title}>
           {(aria) => (
-            <input
+            <GameCoverSearch
               {...aria}
-              value={form.title}
-              onChange={(e) => atualizar("title", e.target.value)}
-              placeholder="Ex.: Hollow Knight"
-              maxLength={120}
-              required
-              autoFocus
+              title={form.title}
+              coverImageUrl={form.cover_image_url}
+              onTitleChange={(title) => atualizar("title", title)}
+              onSelect={(resultado: ExternalGameResult) => {
+                setForm((atual) => ({
+                  ...atual,
+                  title: resultado.name,
+                  cover_image_url: resultado.cover_image_url ?? null,
+                }));
+              }}
+              onClearCover={() => atualizar("cover_image_url", null)}
             />
           )}
         </Field>

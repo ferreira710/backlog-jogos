@@ -12,6 +12,7 @@ function game(overrides: Partial<Game> = {}): Game {
     status: "finished",
     rating: null,
     hours_played: 0,
+    cover_image_url: null,
     created_at: "2026-08-21T17:44:59.872628Z",
     updated_at: "2026-08-21T17:45:02.613121Z",
     ...overrides,

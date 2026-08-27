@@ -93,7 +93,15 @@
   border: 1px solid var(--borda);
   border-radius: var(--raio);
   background: var(--superficie);
+  overflow: hidden;
 }
+.card__capa-slot {
+  /* Sangra até a borda do card — por isso a margem negativa cancela o padding. */
+  margin: -1rem -1rem 0;
+  aspect-ratio: 16 / 9;
+  background: var(--superficie-2);
+}
+.card__capa { width: 100%; height: 100%; object-fit: cover; display: block; }
 .card__topo { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
 .card__plataforma { font-size: 0.8rem; color: var(--texto-fraco); }
 .card__titulo {
@@ -164,6 +172,64 @@
   color: var(--texto-fraco); font: inherit; font-size: 0.8rem;
   text-decoration: underline; cursor: pointer;
 }
+
+/* ---------- busca de capa (autocomplete) ---------- */
+.busca-capa { position: relative; }
+.busca-capa__linha { display: flex; align-items: center; gap: 0.5rem; }
+.busca-capa__linha input { flex: 1; min-width: 0; }
+.busca-capa__limpar { flex-shrink: 0; }
+
+.busca-capa__miniatura-slot { display: contents; }
+.busca-capa__miniatura {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 0.35rem;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: var(--superficie-2);
+}
+.busca-capa__miniatura--vazia { border: 1px dashed var(--borda); }
+
+.busca-capa__lista {
+  position: absolute;
+  z-index: 5;
+  top: calc(100% + 0.25rem);
+  left: 0;
+  right: 0;
+  margin: 0;
+  padding: 0.25rem;
+  list-style: none;
+  max-height: 16rem;
+  overflow-y: auto;
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
+  background: var(--superficie);
+  box-shadow: 0 12px 32px rgb(0 0 0 / 0.18);
+}
+.busca-capa__item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+  padding: 0.4rem;
+  border: 0;
+  border-radius: 0.5rem;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.busca-capa__item:hover,
+.busca-capa__item.is-ativo { background: var(--superficie-2); }
+.busca-capa__info { display: flex; flex-direction: column; min-width: 0; }
+.busca-capa__nome {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.busca-capa__ano { font-size: 0.75rem; color: var(--texto-fraco); }
+.busca-capa__aviso { margin: 0.35rem 0 0; font-size: 0.8rem; color: var(--texto-fraco); }
 
 /* ---------- formulários e diálogos ---------- */
 input, select, textarea {

@@ -13,6 +13,12 @@ interface GameCardProps {
 export function GameCard({ game, onStatusChange, onEdit, onDelete }: GameCardProps) {
   return (
     <article className="card" aria-label={game.title}>
+      <div className="card__capa-slot">
+        {game.cover_image_url && (
+          <img src={game.cover_image_url} alt="" className="card__capa" loading="lazy" />
+        )}
+      </div>
+
       <header className="card__topo">
         <StatusBadge status={game.status} />
         <span className="card__plataforma">{PLATFORM_LABEL[game.platform]}</span>

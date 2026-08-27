@@ -42,6 +42,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/games/external-search": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Search External Games */
+        get: operations["search_external_games_games_external_search_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/games/{game_id}": {
         parameters: {
             query?: never;
@@ -65,6 +82,20 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /**
+         * ExternalGameResult
+         * @description Um resultado da busca de capas no catalogo externo (RAWG).
+         */
+        ExternalGameResult: {
+            /** External Id */
+            external_id: number;
+            /** Name */
+            name: string;
+            /** Released */
+            released?: string | null;
+            /** Cover Image Url */
+            cover_image_url?: string | null;
+        };
         /** GameCreate */
         GameCreate: {
             /** Title */
@@ -79,6 +110,8 @@ export interface components {
              * @default 0
              */
             hours_played?: number;
+            /** Cover Image Url */
+            cover_image_url?: string | null;
         };
         /**
          * GamePage
@@ -106,6 +139,8 @@ export interface components {
             rating: number | null;
             /** Hours Played */
             hours_played: number;
+            /** Cover Image Url */
+            cover_image_url: string | null;
             /**
              * Created At
              * Format: date-time
@@ -132,6 +167,8 @@ export interface components {
             rating?: number | null;
             /** Hours Played */
             hours_played?: number | null;
+            /** Cover Image Url */
+            cover_image_url?: string | null;
         };
         /** HTTPValidationError */
         HTTPValidationError: {
@@ -269,6 +306,44 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
                 };
+            };
+        };
+    };
+    search_external_games_games_external_search_get: {
+        parameters: {
+            query: {
+                q: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExternalGameResult"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Busca externa indisponivel */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };

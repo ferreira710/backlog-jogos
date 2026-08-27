@@ -59,6 +59,7 @@ class Game(SQLModel, table=True):
     status: GameStatus = Field(default=GameStatus.BACKLOG, index=True)
     rating: int | None = Field(default=None, ge=0, le=10)
     hours_played: float = Field(default=0, ge=0)
+    cover_image_url: str | None = Field(default=None, max_length=500)
     created_at: datetime = Field(default_factory=utcnow)
     # onupdate garante o carimbo mesmo se algum caminho de escrita esquecer de setar.
     updated_at: datetime = Field(

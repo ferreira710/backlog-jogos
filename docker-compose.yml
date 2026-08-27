@@ -6,6 +6,10 @@ services:
       # Origem que o BROWSER usa para abrir o frontend — e ela que vai no
       # header Origin, nao o nome do service.
       CORS_ORIGINS: http://localhost:5173
+      # backend/.env fica de fora da imagem (esta no .dockerignore, de
+      # proposito). O compose le esta do .env na raiz do repo (ao lado
+      # deste arquivo) para a substituicao ${...} abaixo.
+      RAWG_API_KEY: ${RAWG_API_KEY:-}
     volumes:
       - backend-data:/data
     ports:

@@ -187,6 +187,57 @@
         }
       }
     },
+    "/games/external-search": {
+      "get": {
+        "tags": [
+          "games"
+        ],
+        "summary": "Search External Games",
+        "operationId": "search_external_games_games_external_search_get",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120,
+              "title": "Q"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ExternalGameResult"
+                  },
+                  "title": "Response Search External Games Games External Search Get"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Busca externa indisponivel"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/games/{game_id}": {
       "get": {
         "tags": [
@@ -318,6 +369,47 @@
   },
   "components": {
     "schemas": {
+      "ExternalGameResult": {
+        "properties": {
+          "external_id": {
+            "type": "integer",
+            "title": "External Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "released": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Released"
+          },
+          "cover_image_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cover Image Url"
+          }
+        },
+        "type": "object",
+        "required": [
+          "external_id",
+          "name"
+        ],
+        "title": "ExternalGameResult",
+        "description": "Um resultado da busca de capas no catalogo externo (RAWG)."
+      },
       "GameCreate": {
         "properties": {
           "title": {
@@ -351,6 +443,18 @@
             "minimum": 0.0,
             "title": "Hours Played",
             "default": 0
+          },
+          "cover_image_url": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 500
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cover Image Url"
           }
         },
         "type": "object",
@@ -423,6 +527,17 @@
             "type": "number",
             "title": "Hours Played"
           },
+          "cover_image_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cover Image Url"
+          },
           "created_at": {
             "type": "string",
             "format": "date-time",
@@ -442,6 +557,7 @@
           "status",
           "rating",
           "hours_played",
+          "cover_image_url",
           "created_at",
           "updated_at"
         ],
@@ -516,6 +632,18 @@
               }
             ],
             "title": "Hours Played"
+          },
+          "cover_image_url": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 500
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cover Image Url"
           }
         },
         "type": "object",

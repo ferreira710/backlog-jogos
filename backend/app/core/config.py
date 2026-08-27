@@ -12,6 +12,11 @@ class Settings(BaseSettings):
     database_url: str = "sqlite:///./app.db"
     sql_echo: bool = False
 
+    # Usada para buscar nome + capa de jogos na RAWG (rawg.io/apidocs).
+    # Vazia = busca externa desabilitada (endpoint responde 503).
+    rawg_api_key: str = ""
+    rawg_base_url: str = "https://api.rawg.io/api"
+
     # NoDecode desliga o json.loads() que o pydantic-settings aplica a campos
     # complexos ANTES dos validators — sem isso, "http://a,http://b" nunca
     # chega no split_origins abaixo e a app morre no boot.

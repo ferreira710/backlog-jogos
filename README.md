@@ -10,6 +10,11 @@ scripts/    sync_client.sh — regenera o client a partir do OpenAPI
 
 ## Subir com Docker
 
+Para a busca de capas de jogos funcionar, copie `.env.example` para `.env`
+(raiz do repo) e preencha `RAWG_API_KEY` (chave gratuita em
+[rawg.io/apidocs](https://rawg.io/apidocs)) — sem ela o app funciona
+normalmente, só o autocomplete de capa fica desabilitado.
+
 ```bash
 docker compose up --build
 ```
@@ -27,6 +32,10 @@ docker compose -f docker-compose.yml -f docker-compose.dev.yml up
 ```
 
 ## Rodar sem Docker
+
+Copie `backend/.env.example` para `backend/.env` e preencha `RAWG_API_KEY`
+se quiser a busca de capas (mesma chave do passo acima, mas em outro arquivo
+— este é lido pela app fora do Docker, aquele é lido pelo `docker compose`).
 
 ```bash
 # backend
